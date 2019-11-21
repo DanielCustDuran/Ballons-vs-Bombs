@@ -16,6 +16,7 @@ public class PlayerControllerX : MonoBehaviour
     private AudioSource playerAudio;
     public AudioClip moneySound;
     public AudioClip explodeSound;
+    public AudioClip jumpSound;
 
     public float boundY;
     public bool isLowEnough;
@@ -58,7 +59,7 @@ public class PlayerControllerX : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         // if player collides with bomb, explode and set gameOver to true
-        if (other.gameObject.CompareTag("Bomb") || other.gameObject.CompareTag("Ground"))
+        if (other.gameObject.CompareTag("Bomb"))
         {
             explosionParticle.Play();
             playerAudio.PlayOneShot(explodeSound, 1.0f);
@@ -66,7 +67,13 @@ public class PlayerControllerX : MonoBehaviour
             Debug.Log("Game Over!");
             Destroy(other.gameObject);
             Destroy(this);
-        } 
+        }
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            playerAudio.PlayOneShot(jumpSound, 1.0f);
+            playerRb.AddForce(Vector3.up * floatForce);
+        }
+
 
         // if player collides with money, fireworks
         else if (other.gameObject.CompareTag("Money"))
